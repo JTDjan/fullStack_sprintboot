@@ -16,8 +16,10 @@ public class Course {
     private String duration;
     private String summary;
 
-    public Course(int id, String name, String location, String price, String duration, String summary) {
-        this.id = id;
+    public Course() {
+    }
+
+    public Course( String name, String location, String price, String duration, String summary) {
         this.name = name;
         this.location = location;
         this.price = price;
@@ -48,4 +50,5 @@ public class Course {
     public String getSummary() {
         return summary;
     }
+
 }

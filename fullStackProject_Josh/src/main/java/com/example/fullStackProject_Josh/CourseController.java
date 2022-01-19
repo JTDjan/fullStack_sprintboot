@@ -1,8 +1,9 @@
 package com.example.fullStackProject_Josh;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,20 +11,36 @@ import java.util.List;
 
 @RestController
 public class CourseController {
-    ArrayList<String> courses = new ArrayList<>(Arrays.asList("Java Class", "React Class", "HTML/CSS Class"));
+    @Autowired
+            CourseRepository repository;
+    ArrayList<Course> courses = new ArrayList<>();
     // 3 endpoints ( List of courses/ single course/ post to add course )
 
     //List of course
     @GetMapping("/courses")
-    public List<String> sayHi() {
-        return courses;
+    public ResponseEntity<List<Course>> getCourses() {
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
     }
 
-    // single course
-    @GetMapping("/courses/{course}")
-    public  String sayHiByName(@PathVariable String course) {
-        return "This course is called " + course;
+    // searching filters
+
+    @GetMapping("/courses/id/{id}")
+    public  ResponseEntity<Course> getCourseById(@PathVariable String id) {
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findCourseByid(Integer.parseInt(id)));
     }
 
-    //post course
+    @GetMapping("/courses/{name}")
+    public  ResponseEntity<Course> findCourseByName(@PathVariable String name) {
+
+       name = name.replaceAll("_", " ");
+        return ResponseEntity.status(HttpStatus.OK).body(repository.findCourseByName(name));
+    }
+
+
+    //posting or adding course
+    @PostMapping("/course")
+    public ResponseEntity<String> createCourse(@RequestBody Course course) {
+        repository.save(course);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Course Added " + course.getName());
+    }
 }
