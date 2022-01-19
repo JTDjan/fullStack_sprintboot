@@ -43,4 +43,6 @@ public class CourseController {
         repository.save(course);
         return ResponseEntity.status(HttpStatus.CREATED).body("Course Added " + course.getName());
     }
+
+    // delete endpoint
 }
